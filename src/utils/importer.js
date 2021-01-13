@@ -76,15 +76,16 @@ export async function importer(ab1, ab2) {
       let replicate_ref = XLSX.utils.encode_cell(replicate_address);
 
       // group*sample*replicate
-      // Genotype_PlantNumber_LeafNumber_LeafPosition -> group, Treatment -> sample.
-      let group = [worksheet_metadata[genotype_ref].v, 'Plant'+worksheet_metadata[plant_number_ref].v, 'Leaf'+worksheet_metadata[leaf_number_ref].v, worksheet_metadata[leaf_position_ref].v].join('_');
-      let value = [group, worksheet_metadata[treatment_ref].v, worksheet_metadata[replicate_ref].v].join('*');
+      // Genotype_LeafNumber_LeafPosition -> group, Treatment -> sample. plant_number->replicate
+      let group = [worksheet_metadata[genotype_ref].v, 'Leaf'+worksheet_metadata[leaf_number_ref].v, worksheet_metadata[leaf_position_ref].v].join('_');
+      let value = [group, worksheet_metadata[treatment_ref].v, 'Plant'+worksheet_metadata[plant_number_ref].v].join('*');
       dict.set(worksheet_metadata[key_ref].v, value);
      
     } 
     let new_column_names = original_column_names.slice(2).map(name => dict.get(name));
     table['header'] = new_column_names;
     console.log(table.header);
+    new Set()
     return table;
 
   } catch (e){
