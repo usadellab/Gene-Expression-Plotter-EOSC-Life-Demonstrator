@@ -66,14 +66,18 @@ export async function importer(ab1, ab2) {
       let treatment_ref = XLSX.utils.encode_cell(treatment_address);
       let leaf_number_address = {c:8, r:row};
       let leaf_number_ref = XLSX.utils.encode_cell(leaf_number_address);
+
+      let plant_number_address = {c:7, r:row};
+      let plant_number_ref = XLSX.utils.encode_cell(plant_number_address);
+
       let leaf_position_address = {c:9, r:row};
       let leaf_position_ref = XLSX.utils.encode_cell(leaf_position_address);
       let replicate_address = {c:14, r:row};
       let replicate_ref = XLSX.utils.encode_cell(replicate_address);
 
       // group*sample*replicate
-      // Genotype_LeafNumber_LeafPosition -> group, Treatment -> sample.
-      let group = [worksheet_metadata[genotype_ref].v, 'Leaf'+worksheet_metadata[leaf_number_ref].v, worksheet_metadata[leaf_position_ref].v].join('_');
+      // Genotype_PlantNumber_LeafNumber_LeafPosition -> group, Treatment -> sample.
+      let group = [worksheet_metadata[genotype_ref].v, 'Plant'+worksheet_metadata[plant_number_ref].v, 'Leaf'+worksheet_metadata[leaf_number_ref].v, worksheet_metadata[leaf_position_ref].v].join('_');
       let value = [group, worksheet_metadata[treatment_ref].v, worksheet_metadata[replicate_ref].v].join('*');
       dict.set(worksheet_metadata[key_ref].v, value);
      
