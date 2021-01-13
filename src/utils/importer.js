@@ -1,14 +1,27 @@
-const XLSX = require('xlsx');
+import XLSX from 'xlsx';
 
-(async () => {
+export async function importer(ab1, ab2) {
   try {
+    const workbook_metadata = XLSX.read(new Uint8Array(ab1), {type:'array'});
+    console.log(workbook_metadata.SheetNames);
+    let worksheet_metadata = workbook_metadata.Sheets[workbook_metadata.SheetNames[0]];
+    console.log(workbook_metadata);
+    console.log(worksheet_metadata['A1'].v);
 
-    const workbook_data = XLSX.readFile('../assets/MOA2010-05_2_transcriptomics_microarrays_normalised.xlsx');
+    const workbook_data = XLSX.read(new Uint8Array(ab2), {type:'array'});
+    console.log(workbook_data.SheetNames);
+    let worksheet_data = workbook_data.Sheets[workbook_data.SheetNames[0]];
+    console.log(workbook_data);
+    console.log(worksheet_data['A1'].v);
+
+
+    // const workbook_data = XLSX.readFile('../assets/MOA2010-05_2_transcriptomics_microarrays_normalised.xlsx');
     
     let original_column_names = [];
 
-    let worksheet_data = workbook_data.Sheets[workbook_data.SheetNames[0]];
+    // let worksheet_data = workbook_data.Sheets[workbook_data.SheetNames[0]];
     let table = new Object();
+    let rows = new Object();
     for (let row = 0; row < 42035; ++row){
       let value = [];
       let key;
@@ -31,17 +44,18 @@ const XLSX = require('xlsx');
         }
       }
       if (value.length){
-        table[key] = value;
+        rows[key] = value;
       }
     }
-    // console.log(table['MICRO.15041.C1']);
+    table.rows = rows;
+    console.log(table.rows['MICRO.15041.C1']);
     // console.log(table['MICRO.15305.C1']);
     // console.log(table['cSTA24A5TH']);
     // console.log(table['BF_TUBSXXXX_0057H09_T3M.SCF']);
 
 
-    const workbook_metadata = XLSX.readFile('../assets/MOA_Multiomics-Analysis_Phenodata-n-MIAPPE.xlsx');
-    let worksheet_metadata = workbook_metadata.Sheets[workbook_metadata.SheetNames[0]];
+    // const workbook_metadata = XLSX.readFile('../assets/MOA_Multiomics-Analysis_Phenodata-n-MIAPPE.xlsx');
+    // let worksheet_metadata = workbook_metadata.Sheets[workbook_metadata.SheetNames[0]];
     let dict = new Map();
     for(let row = 1; row < 907; ++row) {
       let key_address = {c:2, r:row};
@@ -64,14 +78,14 @@ const XLSX = require('xlsx');
       dict.set(worksheet_metadata[key_ref].v, value);
      
     } 
-    let new_column_names = ['ID_REF'].concat(original_column_names.slice(2).map(name => dict.get(name)));
+    let new_column_names = original_column_names.slice(2).map(name => dict.get(name));
     table['header'] = new_column_names;
-    
-
+    console.log(table.header);
+    return table;
 
   } catch (e){
     console.log(e);
   }
   
-})();
+}
 

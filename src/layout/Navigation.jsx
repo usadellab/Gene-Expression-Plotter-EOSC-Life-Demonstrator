@@ -16,8 +16,10 @@ import { settings }  from '@/store/settings';
 
 import JSZip from 'jszip';
 import { readTable } from '@/utils/parser';
+import { importer } from '@/utils/importer';
 
 import { saveAs } from 'file-saver';
+import XLSX from 'xlsx';
 @observer
 class AppNavigation extends React.Component {
 
@@ -132,6 +134,37 @@ class AppNavigation extends React.Component {
     this.setState({ loading: false });
   }
 
+
+  onImportPotatoDataMenuClick = async () => {
+    try {
+      console.log('fetch1:');
+      
+      const url_metadata = 'https://fairdomhub.org/data_files/2765/content_blobs/7814/download';
+      const url_data = 'https://fairdomhub.org/data_files/2771/content_blobs/6908/download';
+      const proxy = 'https://cors-anywhere.herokuapp.com/';
+
+      const res1 = await fetch(proxy+url_metadata, {
+        method: 'GET'
+      });
+      const ab1 = await res1.arrayBuffer();
+
+      console.log('fetch2:');
+      const res2 = await fetch(proxy+url_data, {
+        method: 'GET'
+      });
+
+      const ab2 = await res2.arrayBuffer();
+      console.log('start conversion');
+      const table = await importer(ab1, ab2);
+      console.log('save to dataTable');
+      dataTable.loadFromObject(table, {multiHeader:'*'});
+      console.log('finish');
+
+    } catch (e){
+      console.log(e);
+    }
+
+  }
   onClearDataMenuClick = () => {
     this.changeRoute('data');
     dataTable.clearData();
@@ -266,6 +299,16 @@ class AppNavigation extends React.Component {
               icon="upload"
               name="Import Data"
               onChange={ this.onImportDataMenuClick }
+            />
+          }
+
+          {
+            !settings.preloaded.data &&
+            <NavMenu
+              component="button"
+              icon="upload"
+              name="Import Potato Virus Y Data"
+              onClick={ this.onImportPotatoDataMenuClick }
             />
           }
 
