@@ -62,7 +62,9 @@ export class Dataframe {
    */
   get headerObject () {
     const branches = Array.from(this.colNames.map(name => name.split(this.config.multiHeader)));
-    return branches.reduce(buildTreeBranches, {});
+    const tree = branches.reduce(buildTreeBranches, {});
+    console.log(tree);
+    return tree;
   }
 
   get hasData () {
