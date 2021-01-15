@@ -2,6 +2,7 @@
 import { dataTable } from '@/store/data-store';
 import { mean, deviation } from 'd3';
 
+const potatoSampleOrder = ['00','01','02','03','04','05','06','07','08','09','11'];
 
 /**
  * @typedef {import('../store/plot-store').PlotOptions} PlotOptions
@@ -17,7 +18,10 @@ export const colors = [
   '#e377c2',  // raspberry yogurt pink
   '#7f7f7f',  // middle gray
   '#bcbd22',  // curry yellow-green
-  '#17becf'   // blue-teal
+  '#17becf',   // blue-teal
+  '#666666',
+  '#777777',
+  '#888888'
 ];
 
 const lineStyles = ['solid', 'dot', 'dash', 'longdash', 'dashdot', 'longdashdot'];
@@ -172,18 +176,22 @@ export function stackedLinePlot(accessionIds, options) {
 function createGroupedPlotFromGene(plotData, accessionId, options, line, showOnlyFirstLegend = false) {
   let data = [];
   let type = options.plotType === 'bars' ? 'bar' : 'scatter';
+  let groupIndex = 1;
   Object.keys(plotData).forEach((groupName, index) => {
+    let traceName = showOnlyFirstLegend ? accessionId : groupName;
     let x = [[],[]];
     let y = [];
     let error_y = [];
-    Object.keys(plotData[groupName]).forEach(sampleName => {
-      x[0].push(groupName);
+    let sampleOrder = potatoSampleOrder.filter( x => Object.keys(plotData[groupName]).includes(x));
+    sampleOrder.forEach(sampleName => {
+      x[0].push(`G${groupIndex}`);
       x[1].push(sampleName);
       y.push(mean(plotData[groupName][sampleName]));
       error_y.push(deviation(plotData[groupName][sampleName]));
     });
+    groupIndex++;
     let showlegend = showOnlyFirstLegend ? ( index > 0 ? false : true ) : true;
-    data.push(createTrace(x,y,error_y, accessionId, type, showlegend, line));
+    data.push(createTrace(x,y,error_y, traceName, type, showlegend, line));
   });
   return data;
 }
