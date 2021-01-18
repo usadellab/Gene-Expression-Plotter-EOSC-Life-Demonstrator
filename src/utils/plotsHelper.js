@@ -19,10 +19,12 @@ export const colors = [
   '#7f7f7f',  // middle gray
   '#bcbd22',  // curry yellow-green
   '#17becf',   // blue-teal
-  '#666666',
-  '#777777',
-  '#888888'
+  '#004D43',
+  '#63FFAC',
+  '#A30059'
 ];
+
+const colorway = ['#c7566f', '#57bf67', '#845ec9', '#90b83d', '#d3a333','#c363ab', '#4a7c38', '#adab63', '#698ccc', '#c94f32', '#826627', '#52b8a4', '#d88e61'];
 
 const lineStyles = ['solid', 'dot', 'dash', 'longdash', 'dashdot', 'longdashdot'];
 const markerStyles = ['circle','square','diamond', 'cross', 'triangle-up','pentagon'];
@@ -53,13 +55,15 @@ function getDefaultLayout(showlegend, countUnit, plotTitle) {
     },
     yaxis: {
       title:{
-        text: `count [${countUnit}]` // access to the unit needs to be variable
+        text: 'count [raw]' // access to the unit needs to be variable
       },
       hoverformat: '.2f'
     },
     xaxis: {
       tickangle: 'auto',
-    }
+      dtick: 1
+    },
+    colorway: colorway,
   };
 }
 
@@ -91,8 +95,18 @@ export function multiGeneBarPlot(accessionIds, options){
     let x = [[],[]];
     let y = [];
     let error_y = [];
+    let groupIndex = 0;
+    let group = '';
     plotData.forEach((value, key) => {
-      x[0].push(key[0]);
+
+      if (key[0] !== group) {
+        groupIndex++;
+      }
+      
+      group = key[0];
+
+      // x[0].push(key[0]);
+      x[0].push(`G${groupIndex}`);
       x[1].push(key[1]);
       y.push(mean(value));
       error_y.push(deviation(value));
@@ -114,7 +128,7 @@ export function multiGeneIndCurvesPlot(accessionIds, options) {
   accessionIds.forEach((accession,index) => {
     const plotData = dataTable.getRowAsTree(accession);
     const line = {
-      color : colors[index],
+      color : colorway[index],
     };
     // showLegendCurve = index > 0 ? false : true;
     data.push(...createGroupedPlotFromGene(plotData, accession, options, line, true));
@@ -145,7 +159,7 @@ export function stackedLinePlot(accessionIds, options) {
       let error_y = [];
       if (accessionIds.length > 1) {
         line = {
-          color: colors[colorIndex],
+          color: colorway[colorIndex],
           dash: lineStyles[styleIndex]
         };
         marker = {
@@ -154,7 +168,8 @@ export function stackedLinePlot(accessionIds, options) {
         name = `${groupName} - ${accession}`;
       }
       options.colorBy === 'group' ? colorIndex++ : styleIndex++;
-      Object.keys(plotData[groupName]).forEach(sampleName => {
+      let sampleOrder = potatoSampleOrder.filter( x => Object.keys(plotData[groupName]).includes(x));
+      sampleOrder.forEach(sampleName => {
         x.push(sampleName);
         y.push(mean(plotData[groupName][sampleName]));
         error_y.push(deviation(plotData[groupName][sampleName]));

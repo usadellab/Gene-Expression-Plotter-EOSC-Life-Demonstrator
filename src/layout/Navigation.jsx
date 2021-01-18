@@ -82,7 +82,6 @@ class AppNavigation extends React.Component {
   onImportDataMenuClick = (event) => {
 
     this.setState({ loading: true });
-
     // Get the file ref
     const file = event.target.files.item(0);
     
@@ -132,10 +131,12 @@ class AppNavigation extends React.Component {
     });
 
     this.setState({ loading: false });
+    this.changeRoute('data');
   }
 
 
   onImportPotatoDataMenuClick = async () => {
+    this.setState({ loading: true });
     try {
       console.log('fetch1:');
       
@@ -163,8 +164,9 @@ class AppNavigation extends React.Component {
     } catch (e){
       console.log(e);
     }
-
+    this.setState({ loading: false });
   }
+
   onClearDataMenuClick = () => {
     this.changeRoute('data');
     dataTable.clearData();
@@ -307,7 +309,7 @@ class AppNavigation extends React.Component {
             <NavMenu
               component="button"
               icon="upload"
-              name="Import Potato Virus Y Data"
+              name="Import Potato Virus Y"
               onClick={ this.onImportPotatoDataMenuClick }
             />
           }
