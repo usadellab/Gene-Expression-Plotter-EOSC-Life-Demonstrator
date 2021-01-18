@@ -5,8 +5,8 @@ module.exports = {
     NODE_ENV: 'development',
   },
   production: {
-    APP_NAME: 'GeneExpPlots',
-    BASE_URL: '/GeneExpressionPlots',
+    APP_NAME: 'GXP',
+    BASE_URL: '/Gene-Expression-Plotter-EOSC-Life-Demonstrator',
     NODE_ENV: 'production',
   }
 }
