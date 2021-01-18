@@ -85,14 +85,18 @@ class AppNavigation extends React.Component {
     // Get the file ref
     const file = event.target.files.item(0);
     
-    var zip = new JSZip();
+    const zip = new JSZip();
 
     let zipImport = await zip.loadAsync(file);
-    if (!zipImport.files['GXP_settings.json'])
+    if (!zipImport.files['GXP_settings.json']) {
+      this.setState({ loading: false });
       throw new Error('The provided Import does not contain a GXP_settings.json file.');
+    }
       
-    if (!zipImport.files['expression_table.txt'])
+    if (!zipImport.files['expression_table.txt']) {
+      this.setState({ loading: false });
       throw new Error('The provided Import does not contain an expression_table.txt file.');
+    }
 
     let tableSettings = await zipImport.files['GXP_settings.json'].async('string');
     settings.loadTableSettings(tableSettings);
