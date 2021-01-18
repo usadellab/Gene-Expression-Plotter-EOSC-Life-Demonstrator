@@ -8,23 +8,7 @@ const potatoSampleOrder = ['00','01','02','03','04','05','06','07','08','09','11
  * @typedef {import('../store/plot-store').PlotOptions} PlotOptions
  */
 
-export const colors = [
-  '#1f77b4',  // muted blue
-  '#ff7f0e',  // safety orange
-  '#2ca02c',  // cooked asparagus green
-  '#d62728',  // brick red
-  '#9467bd',  // muted purple
-  '#8c564b',  // chestnut brown
-  '#e377c2',  // raspberry yogurt pink
-  '#7f7f7f',  // middle gray
-  '#bcbd22',  // curry yellow-green
-  '#17becf',   // blue-teal
-  '#004D43',
-  '#63FFAC',
-  '#A30059'
-];
-
-const colorway = ['#c7566f', '#57bf67', '#845ec9', '#90b83d', '#d3a333','#c363ab', '#4a7c38', '#adab63', '#698ccc', '#c94f32', '#826627', '#52b8a4', '#d88e61'];
+export const colors = ['#c7566f', '#57bf67', '#845ec9', '#90b83d', '#d3a333','#c363ab', '#4a7c38', '#adab63', '#698ccc', '#c94f32', '#826627', '#52b8a4', '#d88e61'];
 
 const lineStyles = ['solid', 'dot', 'dash', 'longdash', 'dashdot', 'longdashdot'];
 const markerStyles = ['circle','square','diamond', 'cross', 'triangle-up','pentagon'];
@@ -63,7 +47,7 @@ function getDefaultLayout(showlegend, countUnit, plotTitle) {
       tickangle: 'auto',
       dtick: 1
     },
-    colorway: colorway,
+    colorway: colors,
   };
 }
 
@@ -128,7 +112,7 @@ export function multiGeneIndCurvesPlot(accessionIds, options) {
   accessionIds.forEach((accession,index) => {
     const plotData = dataTable.getRowAsTree(accession);
     const line = {
-      color : colorway[index],
+      color : colors[index],
     };
     // showLegendCurve = index > 0 ? false : true;
     data.push(...createGroupedPlotFromGene(plotData, accession, options, line, true));
@@ -159,7 +143,7 @@ export function stackedLinePlot(accessionIds, options) {
       let error_y = [];
       if (accessionIds.length > 1) {
         line = {
-          color: colorway[colorIndex],
+          color: colors[colorIndex],
           dash: lineStyles[styleIndex]
         };
         marker = {
