@@ -19,7 +19,7 @@ import { readTable } from '@/utils/parser';
 import { importer } from '@/utils/importer';
 
 import { saveAs } from 'file-saver';
-import XLSX from 'xlsx';
+
 @observer
 class AppNavigation extends React.Component {
 
@@ -73,7 +73,7 @@ class AppNavigation extends React.Component {
       zip.file('info_table.txt', data.info);
     if (plotStore.image)
       zip.file('image.png', plotStore.image.split('base64,')[1], {base64:true});
-    
+
     zip.generateAsync({type: 'blob'}).then(content => {
       saveAs(content, 'GXP_data.zip');
     });
@@ -84,7 +84,7 @@ class AppNavigation extends React.Component {
     this.setState({ loading: true });
     // Get the file ref
     const file = event.target.files.item(0);
-    
+
     const zip = new JSZip();
 
     let zipImport = await zip.loadAsync(file);
@@ -92,7 +92,7 @@ class AppNavigation extends React.Component {
       this.setState({ loading: false });
       throw new Error('The provided Import does not contain a GXP_settings.json file.');
     }
-      
+
     if (!zipImport.files['expression_table.txt']) {
       this.setState({ loading: false });
       throw new Error('The provided Import does not contain an expression_table.txt file.');
@@ -138,7 +138,7 @@ class AppNavigation extends React.Component {
     this.setState({ loading: true });
     try {
       console.log('fetch1:');
-      
+
       const url_metadata = 'https://fairdomhub.org/data_files/2765/content_blobs/7814/download';
       const url_data = 'https://fairdomhub.org/data_files/2771/content_blobs/6908/download';
       const proxy = 'https://cors-anywhere.herokuapp.com/';
