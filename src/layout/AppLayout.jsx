@@ -56,7 +56,7 @@ export default class AppLayout extends React.Component {
         {/* NAVIGATION */}
         <div
           className="relative z-20 py-4 px-3 md:w-64
-                     shadow-xl bg-white
+                     shadow-xl bg-white md:overflow-y-auto
                      md:fixed md:block md:inset-y-0 md:left-0"
         >
 
